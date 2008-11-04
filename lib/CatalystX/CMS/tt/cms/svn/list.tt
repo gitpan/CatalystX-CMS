@@ -1,0 +1,9 @@
+[% # site map tree %]
+
+<table>
+[% FOREACH p IN pages %]
+ <tr class="list [% IF loop.count % 2 %]alt[% END %]">
+  <td><a href='/cms/preview/[% p.url %]'>[% p.url %]</a></td><td>[% p.meta.title %]</td>
+ </tr>
+[%+ END %]
+</table>

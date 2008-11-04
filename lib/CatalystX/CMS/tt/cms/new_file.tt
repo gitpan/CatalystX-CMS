@@ -1,0 +1,5 @@
+Create new file <a 
+href="[% c.uri_for(
+    new_file, 
+    {'cxcms' => 'create'}) -%]"
+>[% new_file %]</a>?

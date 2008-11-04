@@ -1,0 +1,28 @@
+--- #YAML:1.0
+name:               CatalystX-CMS
+version:            0.001
+abstract:           drop-in content management system
+author:
+    - Peter Karman <karman@cpan.org>
+license:            perl
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    CatalystX::CRUD:      0.32
+    DateTime::Format::ISO8601:  0
+    Path::Class::File::Lockable:  0
+    SVN::Class:           0.09
+    Template::Plugin::Class:  0
+    Template::Plugin::Handy:  0
+    Test::More:           0
+    XML::LibXML:          0
+    XML::Simple:          0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.46
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
