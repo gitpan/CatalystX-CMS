@@ -3,3 +3,8 @@ Revision history for CatalystX-CMS
 0.001   3 Nov 2008
         First version, released on an unsuspecting world.
 
+0.002   2 Feb 2009
+        * fix crud.js toggle feature to actually save changes.
+        * update dep on SVN::Class to 0.10 for sig chld fix
+
+

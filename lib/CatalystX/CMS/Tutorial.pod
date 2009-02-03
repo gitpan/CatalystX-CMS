@@ -1,6 +1,6 @@
 package CatalystX::CMS::Tutorial;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 =pod
 

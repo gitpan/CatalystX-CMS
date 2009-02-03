@@ -12,7 +12,7 @@ use overload(
     fallback => 1,
 );
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 __PACKAGE__->mk_accessors(qw( cms_root file copy url ));
 __PACKAGE__->delegate_class('CatalystX::CMS::File');

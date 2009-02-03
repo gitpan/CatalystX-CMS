@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               CatalystX-CMS
-version:            0.001
+version:            0.002
 abstract:           drop-in content management system
 author:
     - Peter Karman <karman@cpan.org>
@@ -12,7 +12,7 @@ requires:
     CatalystX::CRUD:      0.32
     DateTime::Format::ISO8601:  0
     Path::Class::File::Lockable:  0
-    SVN::Class:           0.09
+    SVN::Class:           0.10
     Template::Plugin::Class:  0
     Template::Plugin::Handy:  0
     Test::More:           0

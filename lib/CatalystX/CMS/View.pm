@@ -11,7 +11,7 @@ use Class::Inspector;
 use Template::Plugin::Handy 'install';
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 __PACKAGE__->config( WRAPPER => 'cms/wrapper.tt' );
 

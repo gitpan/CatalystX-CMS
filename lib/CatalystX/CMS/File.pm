@@ -9,7 +9,7 @@ use Class::C3;
 use Carp;
 use Data::Dump qw( dump );
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 __PACKAGE__->mk_accessors(qw( attrs content ext ));
 
@@ -131,6 +131,8 @@ sub _parse_page {
     #   this is a page.
     #
 
+    $self->_escape( \$buf );
+
     my ( $attrs, $content )
         = ( $buf =~ m/^\s*\[\%\s+\#\s*CMS\s+(.+?)\%\]\s*(.*)$/s );
     if ( $attrs && $content ) {
@@ -181,12 +183,34 @@ sub write {
     my $content = $self->content || '';
     chomp $content;
     $content .= "\n";
+    $self->_unescape( \$content );
 
     print {$fh} join( "\n", $self->_ttify_attrs, $content )
         or croak "write failed for $self: $!";
     $fh->close;
 
     return -s $self;
+}
+
+my $COMMENT      = 'CXCMS COMMENT: DO NOT REMOVE';
+my @special_tags = qw( textarea );
+
+sub _escape {
+    my ( $self, $buf_ref ) = @_;
+
+    for my $tag (@special_tags) {
+        if ( $$buf_ref =~ m!</?$tag!i ) {
+            $$buf_ref =~ s,<(/?${tag}.*?)>,<!-- $COMMENT $1 -->,sgi;
+        }
+    }
+}
+
+sub _unescape {
+    my ( $self, $buf_ref ) = @_;
+
+    if ( $$buf_ref =~ m!$COMMENT!i ) {
+        $$buf_ref =~ s,<!-- $COMMENT (.+?) -->,<$1>,sgi;
+    }
 }
 
 =head2 create( I<user> )
