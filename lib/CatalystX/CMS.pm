@@ -8,7 +8,7 @@ use base qw( Class::Accessor::Fast );
 
 __PACKAGE__->mk_accessors(qw( model_name view_name strict_html ));
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use XML::Simple;
 use XML::LibXML;
@@ -40,10 +40,10 @@ CatalystX::CMS - drop-in content management system
         lock_period     => 3600,
         root => {
             r  => [
-                MyApp->path_ro('root')
+                MyApp->path_to('root')
             ],
             rw => [
-                '/path/to/cms/workdir'
+                '/path/to/svn/workdir'
             ]
         }
                 

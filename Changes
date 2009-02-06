@@ -7,4 +7,8 @@ Revision history for CatalystX-CMS
         * fix crud.js toggle feature to actually save changes.
         * update dep on SVN::Class to 0.10 for sig chld fix
 
+0.003   5 Feb 2009
+        * doc fixes 
+        * ActionClass attribute test addition
+
 

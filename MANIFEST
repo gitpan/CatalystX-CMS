@@ -40,6 +40,7 @@ t/00-load.t
 t/MyCMS/Changes
 t/MyCMS/lib/MyCMS.pm
 t/MyCMS/lib/MyCMS/Controller/CMS.pm
+t/MyCMS/lib/MyCMS/Controller/Foo.pm
 t/MyCMS/lib/MyCMS/Controller/Root.pm
 t/MyCMS/lib/MyCMS/Model/CMS.pm
 t/MyCMS/lib/MyCMS/View/CMS.pm

@@ -9,13 +9,13 @@ use Class::C3;
 use Carp;
 use Data::Dump qw( dump );
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 __PACKAGE__->mk_accessors(qw( attrs content ext ));
 
 =head1 NAME
 
-CatalystX::CMS::File - class representing a template file
+CatalystX::CMS::File - template file class
 
 =head1 SYNOPSIS
 

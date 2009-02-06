@@ -7,7 +7,7 @@ use Data::Dump qw( dump );
 use Class::C3;
 use CatalystX::CMS;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 __PACKAGE__->mk_accessors(qw( cms ));
 
@@ -46,10 +46,14 @@ Only new or overridden method are documented here.
 
 =cut
 
-=head2 new
+=head2 new([ cms => CatalystX::CMS->new ])
 
 Overrides new() method to call next::method() and then
-instatiate a CatalystX::CMS object.
+instantiate a CatalystX::CMS object.
+
+You can pass in a B<cms> key/value pair. The value
+should be an object that conforms to the CatalystX::CMS
+API.
 
 =cut
 

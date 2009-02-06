@@ -12,14 +12,14 @@ use overload(
     fallback => 1,
 );
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 __PACKAGE__->mk_accessors(qw( cms_root file copy url ));
 __PACKAGE__->delegate_class('CatalystX::CMS::File');
 
 =head1 NAME
 
-CatalystX::CMS::Page - object class representing a template file
+CatalystX::CMS::Page - content storage class
 
 =head1 SYNOPSIS
 
