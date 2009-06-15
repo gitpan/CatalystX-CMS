@@ -7,7 +7,9 @@ use Data::Dump qw( dump );
 use Class::C3;
 use CatalystX::CMS;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
+
+my $DEBUG = 0;
 
 __PACKAGE__->mk_accessors(qw( cms ));
 
@@ -159,6 +161,8 @@ sub do_cms {
     $c->log->debug("$method -> $page") if $c->debug;
     my $res = $self->cms->$method( $c, $controller, $page );
     $c->log->debug( "cms $method returned " . dump $res ) if $c->debug;
+
+    $DEBUG and warn "cms $method returned " . dump($res);
 
     # set current_view in case we have many
     $c->stash->{current_view} ||= $self->cms->view_name;

@@ -15,9 +15,9 @@
   [%- END -%]
   <li><a href="#" onclick="CMS.RenameDialog.show(); return false">Rename page</a></li>
   <li><a href="[% cmspage_url %]?cxcms=delete">Delete page</a></li>
-  [%- UNLESS cmspage.uncommitted -%]
+  [%- IF cmspage.committed -%]
   <li><a href="[% cmspage_url %]?cxcms=history">Page History</a></li>
-  [%- IF cmspage.diff && cmspage.outstr.length > 1 -%]
+  [%- IF cmspage.has_unsaved_changes -%]
   <li><a href="[% cmspage_url %]?cxcms=diff">View Unsaved Changes</a></li>
   [%- END # diff -%]
   [%- END # uncommitted -%]

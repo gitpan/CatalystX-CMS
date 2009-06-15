@@ -8,7 +8,9 @@ use base qw( Class::Accessor::Fast );
 
 __PACKAGE__->mk_accessors(qw( model_name view_name strict_html ));
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
+
+my $DEBUG = 0;
 
 use XML::Simple;
 use XML::LibXML;
@@ -145,9 +147,12 @@ Otherwise, returns anonymous.
 
 sub get_user {
     my ( $self, $c ) = @_;
-    return ( $c->can('user') && defined $c->user )
+    my $user
+        = ( $c->can('user') && defined $c->user )
         ? $c->user->id
         : 'anonymous';
+    $c->log->debug("CMS user = $user") if $c->debug;
+    return $user;
 }
 
 =head2 history( I<c>, I<controller>, I<cmspage> )
@@ -247,7 +252,7 @@ sub blame {
 
 =head2 create( I<c>, I<controller>, I<cmspage> )
 
-Available as a B<cms_mode> method and as a POST method.
+Available only via HTTP POST.
 
 Calls create() method on I<cmspage> passing get_user() for lock owner.
 
@@ -258,11 +263,23 @@ Sets redirect uri for edit().
 sub create {
     my ( $self, $c, $controller, $cmspage ) = @_;
     my %res;
+
+    # must be a POST request
+    unless ( uc( $c->req->method ) eq 'POST' ) {
+        $res{body} = 'Bad HTTP request. Must POST to create a new CMS page.';
+        $res{status} = 400;
+        return \%res;
+    }
+
     eval { $cmspage->create( $self->get_user($c) ) };
     if ($@) {
+        $c->log->error($@);
         $c->error($@);
         return;
     }
+
+    # "pure" REST response would be status 201
+    # but we're dealing with browsers so return the 30x redirect URI
     $res{uri} = $c->uri_for( $cmspage->url, { 'cxcms' => 'edit' } );
     return \%res;
 }
@@ -273,6 +290,8 @@ sub _copy_if_required {
     my ( $self, $c, $controller, $cmspage ) = @_;
 
     my $file = $cmspage->bare_file;
+
+    $DEBUG and warn "copy_if_required $file";
 
     $c->log->debug("checking if we should make copy of $file")
         if $c->debug;
@@ -388,10 +407,12 @@ sub edit {
         $cmspage->lock($user);
     }
 
+    $DEBUG and warn "svn update $cmspage";
+
     # make sure we're working on the latest copy,
     # in case the repository is non-local and we're
     # behind a load balancer (for example)
-    $cmspage->up;   # **not** ->update
+    #$cmspage->up;    # **not** ->update
 
     my %res;
     $res{template} = 'cms/yui/editor.tt';

@@ -7,7 +7,9 @@ use Carp;
 use Data::Dump qw( dump );
 use Path::Class;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
+
+my $DEBUG = 0;
 
 __PACKAGE__->config(
     object_class => 'CatalystX::CMS::Page',
@@ -100,17 +102,15 @@ sub find_page_in_inc {
     my @extra_paths    = @_;
     my $delegate_class = $page->delegate_class;
     my $c              = $self->context;
-    my $type 
-        = $page->type
+    my $type           = $page->type
         || $c->req->params->{'cxcms-type'}
         || $c->config->{cms}->{default_type}
         || 'html';
-    my $flav 
-        = $page->flavour
+    my $flav = $page->flavour
         || $c->req->params->{'cxcms-flavour'}
         || $c->config->{cms}->{default_flavour}
         || 'default';
-        
+
     my $ext = $self->file_ext;
 
     # look through inc_path
@@ -118,6 +118,8 @@ DIR: for my $dir ( @{ $self->inc_path }, @extra_paths ) {
 
         my $flavoured = Path::Class::dir( $dir, $type, $flav );
         my $plain = Path::Class::dir($dir);
+
+        $DEBUG and warn "inc_path flavoured: $flavoured";
 
     SUBDIR: for my $subdir ( $flavoured, $plain ) {
             $c->log->debug("looking in $subdir for $page") if $c->debug;
@@ -132,6 +134,9 @@ DIR: for my $dir ( @{ $self->inc_path }, @extra_paths ) {
                 $page->{flavour}  = $flav;
                 $page->{copy}     = exists $self->{__make_copy}->{"$dir"};
                 $page->read;
+
+                #$c->log->debug( Data::Dump::dump($page) ) if $c->debug;
+
                 last DIR;
             }
 
@@ -150,7 +155,7 @@ DIR: for my $dir ( @{ $self->inc_path }, @extra_paths ) {
         && !$self->{__no_recurse} )
     {
 
-        #warn dump $page;
+        $DEBUG and warn dump $page;
 
         $c->log->debug("$page does not exist -- trying $basename")
             if $c->debug;
@@ -179,7 +184,8 @@ DIR: for my $dir ( @{ $self->inc_path }, @extra_paths ) {
         $page->{flavour} = $flav;
     }
 
-    #carp dump $page;
+    $DEBUG and carp dump $page;
+    $c->log->debug( "returning Model page: " . dump($page) ) if $c->debug;
 
     return $page;
 }

@@ -12,9 +12,9 @@ use overload(
     fallback => 1,
 );
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
-__PACKAGE__->mk_accessors(qw( cms_root file copy url ));
+__PACKAGE__->mk_accessors(qw( cms_root file copy url has_unsaved_changes ));
 __PACKAGE__->delegate_class('CatalystX::CMS::File');
 
 =head1 NAME
@@ -140,28 +140,6 @@ sub bare_file {
     return $file;
 }
 
-=head2 uncommitted 
-
-Returns true if the delegate file has never been committed to the repository.
-
-=cut
-
-sub uncommitted {
-    my $self = shift;
-    my $stat = $self->delegate->status;
-
-    #warn "status = $stat";
-
-    if ($stat) {
-        return 0;
-    }
-    elsif ( $stat == 0 && !$self->delegate->error ) {
-        return 0;
-    }
-
-    return 1;
-}
-
 =head2 tree
 
 Returns array suitable for templating. The array data
@@ -229,7 +207,10 @@ sub _parse_tt_includes {
     my $buf  = shift;
     my $ext  = $self->ext;
     my @files;
+    my $depth = 100;
+    my $count = 0;
     while ( $buf =~ m/(PROCESS|INCLUDE|INSERT) (\S+)/g ) {
+        last if $count++ > $depth;
         my $f = $2;
         unless ( $buf =~ m/BLOCK\ +$f/ ) {
             $f =~ s/$ext$//;

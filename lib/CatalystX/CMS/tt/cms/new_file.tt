@@ -1,5 +1,4 @@
-Create new file <a 
-href="[% c.uri_for(
-    new_file, 
-    {'cxcms' => 'create'}) -%]"
->[% new_file %]</a>?
+<form action="[% c.uri_for(new_file,{'cxcms' => 'create'}) %]" method="post">
+[% new_file %] does not exist.<br />
+<input type="submit" value="Create new file [% new_file | html %]" />
+</form>

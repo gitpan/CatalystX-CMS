@@ -4,32 +4,10 @@
     <title>[% cmspage.title || name %]</title>
     <link rel="shortcut icon" href="[% CMS.static %]/favicon.ico" 
           type="image/x-icon" />
-    [% PROCESS cms/yui/base.tt %]
-    [% # YUI stuff first %]
-    [% FOREACH sheet IN YUI.css.unique %]
-     <link rel="stylesheet" type="text/css"
-           href="[% YUI.url %]/[% YUI.version %]/[% sheet %].css" />
-    [% END %]
-    [% FOREACH js IN YUI.js.unique %]
-     <script type="text/javascript" 
-         src="[% YUI.url %]/[% YUI.version %]/[% js %].js"></script>
-    [% END %]
-    
-    [% # debugging console for development %]
-    <script type="text/javascript">
-     YAHOO.namespace('console');
-     YAHOO.console.OK2LOG = [% c.debug ? 'true' : 'false' %];
-    </script>
-    <script type="text/javascript" 
-         src="http://static.msi.umn.edu/db/js/console.js"></script>
 
-    <link rel="stylesheet" type="text/css" media="all" 
-          href="[% CMS.static %]/css/cms.css" />
-          
-    <script type="text/javascript" 
-         src="[% CMS.static %]/js/cms.js"></script>
-
-    [% # now local css and js %]
+    [% PROCESS cms/wrappers/html/cms/yui_header.tt %]
+    [% PROCESS cms/wrappers/html/cms/cms_header.tt %]    
+    [% # local css and js %]
     [% PROCESS cms/wrappers/html/head_maker.tt %]
         
  </head>

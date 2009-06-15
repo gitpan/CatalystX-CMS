@@ -4,14 +4,15 @@ use warnings;
 use base qw(
     SVN::Class::File
     Path::Class::File::Lockable
+    Class::Accessor::Fast
 );
 use Class::C3;
 use Carp;
 use Data::Dump qw( dump );
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
-__PACKAGE__->mk_accessors(qw( attrs content ext ));
+__PACKAGE__->mk_accessors(qw( attrs content ext has_unsaved_changes ));
 
 =head1 NAME
 
@@ -116,7 +117,55 @@ sub read {
 
     # TODO does ->slurp correctly handle utf8?
     $self->_parse_page( scalar $self->slurp );
+
+    #$self->debug(1);
+
+    # cache whether we have local mods
+    my $committed = $self->committed;
+    my $diff      = $self->diff;
+    chomp( my $outstr = $self->outstr );
+
+    #warn "committed = $committed\ndiff = $diff\noutstr = $outstr\n";
+
+    if ( $committed && $diff && length $outstr ) {
+        $self->has_unsaved_changes(1);
+    }
+
+    #$self->debug(0);
+
     return $self;
+}
+
+=head2 committed 
+
+Returns true if the delegate file has ever been committed to the repository.
+
+=cut
+
+sub committed {
+    my $self = shift;
+    my $stat = $self->status;
+
+    #warn "status = $stat";
+    #warn "error  = " . $self->errstr;
+
+    if ( $stat == 0 && grep {m/is not a working copy/} @{ $self->stderr } ) {
+
+        #warn "committed == 0";
+        return 0;
+    }
+    elsif ($stat) {
+
+        # some status means svn knows about it or its parent dir.
+        return 1;
+    }
+    elsif ( $stat == 0
+        && !$self->error )
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 sub _parse_page {
@@ -136,7 +185,12 @@ sub _parse_page {
     my ( $attrs, $content )
         = ( $buf =~ m/^\s*\[\%\s+\#\s*CMS\s+(.+?)\%\]\s*(.*)$/s );
     if ( $attrs && $content ) {
+        my $depth = 100;
+        my $count = 0;
         while ( $attrs =~ m/\bcmspage\.attrs\.(\w+)\s*=\s*(['"])(.+?)\2/sg ) {
+
+            last if $count++ > $depth;
+
             my $key = $1;
             my $val = $3;
 
@@ -265,7 +319,7 @@ sub _ttify_attrs {
     return $buf . "\n%]";
 }
 
-=head2 save( I<message> [, I<leave_lock>] )
+=head2 save( I<message> [, I<leave_lock>, I<username> ] )
 
 Will write() file, add() to the SVN workspace if necessary,
 and then call commit( I<message> ).
@@ -276,12 +330,16 @@ Otherwise, returns commit() return value.
 Pass a true for I<leave_lock> to leave the lock file intact
 after the commit().
 
+Pass an authorized I<username> to have the commit() made with that
+credential.
+
 =cut
 
 sub save {
     my $self       = shift;
     my $message    = shift || '[no log message]';
     my $leave_lock = shift || 0;
+    my $username   = shift;
 
     # pass force flag to write() since we want lock
     # to persist till we've committed.
@@ -305,7 +363,12 @@ sub save {
     }
 
     # walk up the tree
-    while ( $dir_status eq '0' && $dir->error ) {
+    while (
+        $dir_status eq '0'
+        && ( $dir->errstr
+            || grep {/is not a working copy/} @{ $dir->stderr } )
+        )
+    {
 
         $self->debug and warn "no status for $dir";
         unshift( @to_add, $dir );
@@ -330,7 +393,11 @@ sub save {
     # so that we do not add unaffected files (like lock files) by mistake.
     for my $d (@to_add) {
         $d->add( ['-N'] ) unless $d->status eq 'A';
-        $d->commit( "new directory", ['-N'] )
+        my @opts = '-N';
+        if ($username) {
+            push( @opts, "--username $username" );
+        }
+        $d->commit( "new directory", \@opts )
             or croak "add directory $d failed: " . $d->errstr;
     }
 

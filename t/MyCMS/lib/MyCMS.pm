@@ -5,7 +5,10 @@ use warnings;
 use lib qw( ../../lib ../lib lib  );
 
 use Catalyst::Runtime '5.70';
-use Catalyst qw/-Debug ConfigLoader Static::Simple/;
+use Catalyst qw(
+    ConfigLoader
+    Static::Simple::ByClass
+);
 
 our $VERSION = '0.01';
 
@@ -15,9 +18,10 @@ use File::Spec;
 # setup test env **outside** our app dir,
 # so we can use svn without conflict.
 # we don't use File::Temp because we want a consistent path.
-my $tmpdir  = File::Spec->tmpdir();
-my $repos   = Path::Class::dir( $tmpdir, 'cxcms', 'repos' );
-my $cmsroot = Path::Class::dir( $tmpdir, 'cxcms', 'work' );
+my $tmpdir     = $ENV{CXCMS_TMPDIR} || File::Spec->tmpdir();
+my $tmpbasedir = Path::Class::dir( $tmpdir, 'cxcms' );
+my $repos      = Path::Class::dir( $tmpbasedir, 'repos' );
+my $cmsroot    = Path::Class::dir( $tmpbasedir, 'work' );
 
 # check if setup already exists
 unless ( -d $repos && -s "$repos/format" ) {
@@ -30,28 +34,15 @@ unless ( -d $repos && -s "$repos/format" ) {
 }
 
 END {
-    unless ( $ENV{PERL_DEBUG} ) {
-        $repos->rmtree;
-        $cmsroot->rmtree;
+    unless ( $ENV{CXCMS_TMPDIR} ) {
+        $tmpbasedir->rmtree;
     }
 }
-
-# get our base static files for free
-# TODO this should only be necessary during devel
-# and/or until we install a local copy of the base .js and .css
-use Class::Inspector;
-use Path::Class::Dir;
-use CatalystX::CMS;
-my $template_base = Class::Inspector->loaded_filename('CatalystX::CMS');
-$template_base =~ s/\.pm$//;
 
 __PACKAGE__->config(
     name   => 'MyCMS',
     static => {
-        include_path => [
-            __PACKAGE__->path_to('root'),
-            Path::Class::Dir->new( $template_base, 'tt' ),
-        ],
+        classes => ['CatalystX::CMS::tt'],
     },
     cms => {
         use_editor => 1,

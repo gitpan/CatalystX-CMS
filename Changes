@@ -11,4 +11,9 @@ Revision history for CatalystX-CMS
         * doc fixes 
         * ActionClass attribute test addition
 
+0.004   14 June 2009
+        * add real test suite
+        * add CatalystX::CMS::tt class for Catalyst::Plugin::Static::Simple::ByClass
+        * refactor cms .tt files out for easier integration with existing wrappers
+        * set TT CACHE_SIZE to zero (0) in default View config() to fix race condition.
 

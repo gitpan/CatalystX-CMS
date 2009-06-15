@@ -9,6 +9,7 @@ lib/CatalystX/CMS/Controller.pm
 lib/CatalystX/CMS/File.pm
 lib/CatalystX/CMS/Model.pm
 lib/CatalystX/CMS/Page.pm
+lib/CatalystX/CMS/tt.pm
 lib/CatalystX/CMS/tt/cms/error.tt
 lib/CatalystX/CMS/tt/cms/new_file.tt
 lib/CatalystX/CMS/tt/cms/svn/blame.tt
@@ -22,6 +23,8 @@ lib/CatalystX/CMS/tt/cms/wrappers/html/cms/footer.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/cms/header.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/cms/logger.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/cms/wrapper.tt
+lib/CatalystX/CMS/tt/cms/wrappers/html/cms/yui_header.tt
+lib/CatalystX/CMS/tt/cms/wrappers/html/cms/cms_header.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/default/body.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/default/footer.tt
 lib/CatalystX/CMS/tt/cms/wrappers/html/default/header.tt
@@ -37,6 +40,7 @@ Makefile.PL
 MANIFEST
 README
 t/00-load.t
+t/01-cms.t
 t/MyCMS/Changes
 t/MyCMS/lib/MyCMS.pm
 t/MyCMS/lib/MyCMS/Controller/CMS.pm

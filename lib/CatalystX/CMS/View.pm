@@ -11,9 +11,19 @@ use Class::Inspector;
 use Template::Plugin::Handy 'install';
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
-__PACKAGE__->config( WRAPPER => 'cms/wrapper.tt' );
+my $DEBUG = 0;
+
+__PACKAGE__->config(
+    WRAPPER => 'cms/wrapper.tt',
+
+    # turn .tt caching off so that we force read on every req.
+    # with caching on (default) occasional errors if the
+    # .tt is saved to disk and then immediately requested,
+    # because the cached version is being read instead of from disk.
+    CACHE_SIZE => 0,
+);
 
 __PACKAGE__->mk_accessors(qw( cms_template_base ));
 
@@ -98,23 +108,34 @@ the C<template> value if it isa CatalystX::CMS::Page object.
 sub process {
     my ( $self, $c ) = @_;
     my $t = $c->stash->{template};
+    $c->log->debug("template = $t") if $c->debug;
     if ( blessed($t)
         and $t->isa('CatalystX::CMS::Page') )
     {
         my $file = $t->file . $t->ext;
 
         if ( -s $t->delegate ) {
-            $c->log->debug("resetting template to $file") if $c->debug;
+            $c->log->debug(
+                "resetting template to $file [" . $t->delegate . ']' )
+                if $c->debug;
             $c->stash( template => $file );
             unless ( exists $c->stash->{cmspage} ) {
                 $c->stash( cmspage => $t );
             }
         }
         else {
+            $c->log->debug( "setting new_file = " . $t->file ) if $c->debug;
             $c->stash( new_file => $t->file, template => 'cms/new_file.tt' );
         }
     }
-    $self->next::method($c);
+
+    $DEBUG and warn "View -> process next::method";
+
+    my $ret = $self->next::method($c);
+
+    $DEBUG and warn "View -> process complete";
+
+    return $ret;
 }
 
 =head2 template_vars
@@ -196,6 +217,9 @@ sub template_vars {
 
         #$c->log->debug( "CMS var = " . dump $CMS );
     }
+
+    $DEBUG and warn "View -> template_vars set";
+    $DEBUG and warn "View: " . dump($CMS);
 
     defined $cvar
         ? ( $cvar => $c )
