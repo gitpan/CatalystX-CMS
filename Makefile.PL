@@ -20,6 +20,7 @@ WriteMakefile(
         'Template::Plugin::Class' => 0,
         'DateTime::Format::ISO8601' => 0,
         'Catalyst::Plugin::Static::Simple::ByClass' => 0,
+        'Catalyst::Plugin::ConfigLoader' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'CatalystX-CMS-*' },
