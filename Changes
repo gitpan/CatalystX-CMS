@@ -21,3 +21,6 @@ Revision history for CatalystX-CMS
         * add missing dependency on Catalyst::Plugin::ConfigLoader that was causing
           cpantesters to croak.
 
+0.006   18 Aug 2009
+        * fix default search() behaviour and add cms_list() local URL method.
+

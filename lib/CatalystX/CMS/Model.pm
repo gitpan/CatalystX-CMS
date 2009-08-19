@@ -7,7 +7,7 @@ use Carp;
 use Data::Dump qw( dump );
 use Path::Class;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 my $DEBUG = 0;
 
@@ -102,11 +102,13 @@ sub find_page_in_inc {
     my @extra_paths    = @_;
     my $delegate_class = $page->delegate_class;
     my $c              = $self->context;
-    my $type           = $page->type
+    my $type 
+        = $page->type
         || $c->req->params->{'cxcms-type'}
         || $c->config->{cms}->{default_type}
         || 'html';
-    my $flav = $page->flavour
+    my $flav 
+        = $page->flavour
         || $c->req->params->{'cxcms-flavour'}
         || $c->config->{cms}->{default_flavour}
         || 'default';
@@ -184,10 +186,60 @@ DIR: for my $dir ( @{ $self->inc_path }, @extra_paths ) {
         $page->{flavour} = $flav;
     }
 
+    # calculate url if it is empty
+    if ( !$page->url ) {
+        $page->calc_url;
+    }
+
     $DEBUG and carp dump $page;
     $c->log->debug( "returning Model page: " . dump($page) ) if $c->debug;
 
     return $page;
+}
+
+=head2 make_query
+
+Returns a CODE ref according to CatalystX::CRUD::Model::File API
+to skip all C<.svn> dirs and files not ending with file_ext().
+
+=cut
+
+sub make_query {
+    my ($self) = @_;
+    my $ext = quotemeta( $self->file_ext );
+    return sub {
+        my ( $root, $dir, $file ) = @_;
+
+        #warn $file;
+        return 0 if $dir  =~ m/\.svn/;
+        return 0 if $file =~ m/\.svn/;
+
+        #warn "$ext : considering $file";
+        return 0 unless $file =~ m/$ext$/;
+
+        #warn " >>>>>>> match on $file";
+        return 1;
+    };
+}
+
+=head2 search
+
+Overrides default method to call fetch() on each page.
+
+=cut
+
+sub search {
+    my $self = shift;
+    my $filter_sub = shift || $self->make_query;
+    my @objects;
+    for my $root ( @{ $self->inc_path } ) {
+        my $files = $self->_find( $filter_sub, $root );
+        for my $f ( sort keys %$files ) {
+            my $page = $self->fetch( file => $f, url => '' );    # calc url
+            push @objects, $page;
+        }
+    }
+    return \@objects;
 }
 
 1;

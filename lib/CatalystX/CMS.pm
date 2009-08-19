@@ -8,7 +8,7 @@ use base qw( Class::Accessor::Fast );
 
 __PACKAGE__->mk_accessors(qw( model_name view_name strict_html ));
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 my $DEBUG = 0;
 

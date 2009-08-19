@@ -7,7 +7,7 @@
 
 <div id="admin_links">
  <ul class="navlist">
-  <li><a href="[% c.uri_for('/cms/list') # TODO where to point this? %]">List all pages</a></li>
+  <li><a href="[% c.uri_for('cms_list') %]">List all pages</a></li>
   <li><a href="#" onclick="CMS.CreateDialog.show(); return false">Create new page</a></li>
   [%- IF cmspage.url -%]
   [%- IF CMS.mode != 'edit' -%]

@@ -12,7 +12,7 @@ use overload(
     fallback => 1,
 );
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 __PACKAGE__->mk_accessors(qw( cms_root file copy url has_unsaved_changes ));
 __PACKAGE__->delegate_class('CatalystX::CMS::File');
@@ -88,6 +88,26 @@ Returns file() stringified.
 
 =cut
 
+=head2 calc_url
+
+Determines the url value based on file(), type()
+and flavour(). Sets the url() value and returns the value.
+
+=cut
+
+sub calc_url {
+    my $self = shift;
+    my $file = $self->file;
+    my $type = $self->type;
+    my $flav = $self->flavour;
+    my $ext  = $self->delegate->ext;
+    $file =~ s!^$type[\/\\]!!;
+    $file =~ s!^$flav[\/\\]!!;
+    $file =~ s!\Q$ext\E$!!;
+    $self->url($file);
+    return $file;
+}
+
 =head2 title
 
 Returns the C<title> from attrs().
@@ -136,7 +156,7 @@ sub bare_file {
     my $self = shift;
     my $file = $self->delegate->file->basename;
     my $ext  = $self->delegate->ext;
-    $file =~ s/$ext$//;
+    $file =~ s/\Q$ext\E$//;
     return $file;
 }
 

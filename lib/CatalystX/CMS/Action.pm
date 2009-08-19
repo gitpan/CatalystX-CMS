@@ -7,7 +7,7 @@ use Data::Dump qw( dump );
 use Class::C3;
 use CatalystX::CMS;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 my $DEBUG = 0;
 

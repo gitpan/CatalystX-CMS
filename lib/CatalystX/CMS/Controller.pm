@@ -7,7 +7,7 @@ use Data::Dump qw( dump );
 use Class::C3;
 use Catalyst::Utils;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 __PACKAGE__->mk_accessors(qw( cms ));
 
@@ -155,6 +155,24 @@ Default returns true. Override to implement authorization.
 =cut
 
 sub cms_may_edit {1}
+
+=head2 cms_list
+
+Default local URL method for browsing the pages available in the CMS.
+Uses the C<cms/svn/list.tt> template by default.
+
+Override this method in your local controller to customize
+the browsing of your CMS.
+
+=cut
+
+sub cms_list : Local {
+    my ( $self, $c ) = @_;
+    my $pages = $c->model( $self->cms->{model_name} )->search();
+    $c->stash( pages    => $pages );
+    $c->stash( template => 'cms/svn/list.tt' );
+    $c->stash( new_file => 1 );    # hide the 'Edit this page' link
+}
 
 1;
 

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               CatalystX-CMS
-version:            0.005
+version:            0.006
 abstract:           drop-in content management system
 author:
     - Peter Karman <karman@cpan.org>
