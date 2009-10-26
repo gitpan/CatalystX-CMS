@@ -24,3 +24,6 @@ Revision history for CatalystX-CMS
 0.006   18 Aug 2009
         * fix default search() behaviour and add cms_list() local URL method.
 
+0.007   25 Oct 2009
+        * add missing dependency on Catalyst::View::TT
+

@@ -7,7 +7,7 @@ use Data::Dump qw( dump );
 use Class::C3;
 use Catalyst::Utils;
 
-our $VERSION = '0.006';
+our $VERSION = '0.007';
 
 __PACKAGE__->mk_accessors(qw( cms ));
 

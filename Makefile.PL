@@ -12,6 +12,7 @@ WriteMakefile(
     PREREQ_PM => {
         'Test::More' => 0,
         'CatalystX::CRUD' => '0.32',
+        'Catalyst::View::TT' => 0,
         'SVN::Class' => '0.10',
         'Path::Class::File::Lockable' => 0,
         'XML::Simple' => 0,
