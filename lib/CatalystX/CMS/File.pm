@@ -10,7 +10,7 @@ use Class::C3;
 use Carp;
 use Data::Dump qw( dump );
 
-our $VERSION = '0.007';
+our $VERSION = '0.008';
 
 __PACKAGE__->mk_accessors(qw( attrs content ext has_unsaved_changes ));
 

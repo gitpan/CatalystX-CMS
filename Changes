@@ -27,3 +27,6 @@ Revision history for CatalystX-CMS
 0.007   25 Oct 2009
         * add missing dependency on Catalyst::View::TT
 
+0.008   04 Dec 2009
+        * add missing deps to Makefile.PL per RT#50940
+
