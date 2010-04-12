@@ -3,7 +3,8 @@ use strict;
 use warnings;
 use base qw( Catalyst::View::TT );
 use CatalystX::CMS;
-use Class::C3;
+use MRO::Compat;
+use mro 'c3';
 use Carp;
 use Data::Dump qw( dump );
 use Path::Class;
@@ -11,7 +12,7 @@ use Class::Inspector;
 use Template::Plugin::Handy 'install';
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 my $DEBUG = 0;
 

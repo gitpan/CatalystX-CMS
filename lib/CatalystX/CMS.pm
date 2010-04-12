@@ -3,12 +3,13 @@ use strict;
 use warnings;
 use Carp;
 use Data::Dump qw( dump );
-use Class::C3;
+use MRO::Compat;
+use mro 'c3';
 use base qw( Class::Accessor::Fast );
 
 __PACKAGE__->mk_accessors(qw( model_name view_name strict_html ));
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 my $DEBUG = 0;
 

@@ -5,14 +5,15 @@ use base qw( CatalystX::CRUD::Object );
 use Carp;
 use Data::Dump qw( dump );
 use CatalystX::CMS::File;
-use Class::C3;
+use MRO::Compat;
+use mro 'c3';
 
 use overload(
     q[""]    => sub { shift->delegate },
     fallback => 1,
 );
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 __PACKAGE__->mk_accessors(qw( cms_root file copy url has_unsaved_changes ));
 __PACKAGE__->delegate_class('CatalystX::CMS::File');

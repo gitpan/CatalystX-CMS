@@ -2,12 +2,13 @@ package CatalystX::CMS::Model;
 use strict;
 use warnings;
 use base qw( CatalystX::CRUD::Model::File );
-use Class::C3;
+use MRO::Compat;
+use mro 'c3';
 use Carp;
 use Data::Dump qw( dump );
 use Path::Class;
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 my $DEBUG = 0;
 

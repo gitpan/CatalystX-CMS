@@ -4,10 +4,11 @@ use warnings;
 use base 'Catalyst::Action';
 use Carp;
 use Data::Dump qw( dump );
-use Class::C3;
+use MRO::Compat;
+use mro 'c3';
 use CatalystX::CMS;
 
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 my $DEBUG = 0;
 

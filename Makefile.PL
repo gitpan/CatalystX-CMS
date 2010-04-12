@@ -23,6 +23,7 @@ WriteMakefile(
         'Catalyst::Plugin::Static::Simple::ByClass' => 0,
         'Catalyst::Plugin::ConfigLoader' => 0,
         'Catalyst::Action::RenderView'   => 0,
+        'MRO::Compat'  => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'CatalystX-CMS-*' },
