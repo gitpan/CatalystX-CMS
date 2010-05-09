@@ -33,3 +33,6 @@ Revision history for CatalystX-CMS
 0.009   11 April 2010
         * change dep from Class::C3 to MRO::Compat
 
+0.010   08 May 2010
+        * added dep for YAML since ConfigLoader needs it for tests.
+

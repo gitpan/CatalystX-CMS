@@ -11,7 +11,7 @@ use mro 'c3';
 use Carp;
 use Data::Dump qw( dump );
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 __PACKAGE__->mk_accessors(qw( attrs content ext has_unsaved_changes ));
 

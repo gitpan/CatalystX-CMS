@@ -8,7 +8,7 @@ use MRO::Compat;
 use mro 'c3';
 use CatalystX::CMS;
 
-our $VERSION = '0.009';
+our $VERSION = '0.010';
 
 my $DEBUG = 0;
 
