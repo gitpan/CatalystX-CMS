@@ -18,13 +18,13 @@ ok( $result = request('/cms/mypage?cxcms=create'), "GET create" );
 
 #diag( dump $result );
 
-is( $result->headers->{status}, 400, "may not GET to create" );
+is( $result->code, 400, "may not GET to create" );
 
 ok( $result = request( POST('/cms/mypage?cxcms=create') ), "POST create" );
 
 #diag( dump $result );
 
-is( $result->headers->{status}, 302, "redirect on create" );
+is( $result->code, 302, "redirect on create" );
 
 # fetch new URI and check content
 
@@ -32,7 +32,7 @@ ok( $result = request('/cms/mypage'), "get redirect uri" );
 
 #diag( dump $result );
 
-is( $result->headers->{status}, 200, "GET new page ok" );
+is( $result->code, 200, "GET new page ok" );
 
 # save some new content
 
@@ -49,11 +49,11 @@ ok( $result = request(
 
 #diag( dump $result );
 
-is( $result->headers->{status}, 302, "redirect on save" );
+is( $result->code, 302, "redirect on save" );
 
-#diag( $result->headers->{location} );
+#diag( $result->code );
 
-ok( $result = request( $result->headers->{location} ),
+ok( $result = request( $result->header('location') ),
     "GET updated content" );
 
 #diag( dump $result );

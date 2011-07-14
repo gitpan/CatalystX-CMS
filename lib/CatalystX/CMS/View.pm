@@ -12,7 +12,7 @@ use Class::Inspector;
 use Template::Plugin::Handy 'install';
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.010';
+our $VERSION = '0.011';
 
 my $DEBUG = 0;
 

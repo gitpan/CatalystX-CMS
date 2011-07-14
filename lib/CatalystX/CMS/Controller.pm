@@ -8,7 +8,7 @@ use MRO::Compat;
 use mro 'c3';
 use Catalyst::Utils;
 
-our $VERSION = '0.010';
+our $VERSION = '0.011';
 
 __PACKAGE__->mk_accessors(qw( cms ));
 
